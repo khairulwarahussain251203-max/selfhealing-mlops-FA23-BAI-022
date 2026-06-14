@@ -1,0 +1,11 @@
+groups:
+  - name: model_confidence_alerts
+    rules:
+      - alert: ModelConfidenceDrift
+        expr: prediction_confidence_score < 0.587
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Model confidence drift detected"
+          description: "prediction_confidence_score has stayed below the assigned threshold (0.587) for more than 1 minute. Triggering rollback to the stable fallback."

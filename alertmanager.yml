@@ -1,0 +1,20 @@
+global:
+  resolve_timeout: 1m
+
+route:
+  receiver: jenkins-rollback-webhook
+  group_by: ['alertname']
+  group_wait: 0s
+  group_interval: 30s
+  repeat_interval: 1m
+
+receivers:
+  - name: jenkins-rollback-webhook
+    webhook_configs:
+      - url: 'http://16.170.218.108:8080/generic-webhook-trigger/invoke?token=ROLLBACK_034051_TOKEN'
+        send_resolved: false
+        http_config:
+          basic_auth:
+            username: admin
+            # Live value injected on the VM (Jenkins API token); not committed to the public repo.
+            password: REPLACE_WITH_JENKINS_API_TOKEN

@@ -1,0 +1,20 @@
+// Rollback pipeline used by the Jenkins job `rollback-to-stable`.
+// Triggered by Alertmanager via the Generic Webhook Trigger (token ROLLBACK_034051_TOKEN)
+// when the ModelConfidenceDrift alert fires. It switches the Service selector from the
+// blue (unstable) slot to the green (stable) slot, completing the self-healing loop.
+pipeline {
+    agent any
+    stages {
+        stage('Switch Traffic to Stable (Green)') {
+            steps {
+                sh '''
+                    set -e
+                    kubectl patch service sentiment-api-service -p '{"spec":{"selector":{"app":"sentiment-api","slot":"green"}}}'
+                    echo "Service selector patched to the green (stable) slot:"
+                    kubectl get service sentiment-api-service -o jsonpath='{.spec.selector}'
+                    echo ""
+                '''
+            }
+        }
+    }
+}

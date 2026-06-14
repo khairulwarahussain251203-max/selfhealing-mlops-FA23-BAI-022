@@ -1,0 +1,12 @@
+# Never commit SSH keys or secrets
+selfhealing_key
+selfhealing_key.pub
+*.pem
+.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/

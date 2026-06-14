@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentiment-blue-deployment
+  labels:
+    app: sentiment-api
+    slot: blue
+spec:
+  # The provided unstable app stores drift state per-pod in memory, and a single
+  # POST /inject-drift only affects one pod. Running one blue replica guarantees
+  # that injected drift is observed by every prediction and by the exporter, so
+  # the ModelConfidenceDrift alert fires reliably and the self-healing loop works.
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sentiment-api
+      slot: blue
+  template:
+    metadata:
+      labels:
+        app: sentiment-api
+        slot: blue
+    spec:
+      containers:
+        - name: sentiment-api
+          image: khairulwara25/sentiment-api:unstable
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - name: logs
+              mountPath: /app/logs
+      volumes:
+        - name: logs
+          persistentVolumeClaim:
+            claimName: sentiment-logs-pvc
