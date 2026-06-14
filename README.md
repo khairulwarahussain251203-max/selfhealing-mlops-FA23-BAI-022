@@ -76,3 +76,5 @@ Prometheus + Alertmanager run as Docker containers (host network); Grafana via a
 the app runs on Minikube exposed via NodePort 32500 (forwarded to the host with socat).
 
 <!-- CI webhook verification: push trigger test -->
+
+<!-- CI webhook verification: push trigger test -->
